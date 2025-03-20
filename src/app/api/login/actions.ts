@@ -44,3 +44,23 @@ export async function authenticate(formData: FormData) {
     return { error: "Failed to authenticate. Please try again later." }
   }
 }
+
+// Test database connection
+export async function testConnection() {
+  try {
+    const result = await client.execute({
+      sql: "SELECT 1",
+      args: []  // Adding required empty args array
+    })
+    return { success: true, message: "Database connection successful" }
+  } catch (error: any) {
+    console.error("Connection test error:", error)
+    return {
+      success: false,
+      message: "Database connection failed",
+      error: error.message,
+      url: process.env.TURSO_CONNECTION_URL ? "URL is configured" : "URL is missing",
+      token: process.env.TURSO_AUTH_TOKEN ? "Token is configured" : "Token is missing"
+    }
+  }
+}
